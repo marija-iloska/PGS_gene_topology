@@ -1,8 +1,18 @@
 clear all
 clc
 
+%rehash toolboxcache
+%restoredefaultpath
+%savepath
+
+
+%pc = parcluster('local');
+
+%pc.JobStorageLocation = strcat(getenv('SCRATCH'),'/', getenv('SLURM_JOB_ID'))
+
+
 %% SETTINGS for generating data
-dim_y = 20; var_u =1;
+dim_y = 4; var_u =1;
 p_s = 0.7; p_ns = 0.3;
 T = 1e3;
 
@@ -32,27 +42,27 @@ MSE = sum(sum((C-C_est).^2))/dim_x;
 %% Gibbs Sampler
 
 % Settings for Gibbs Bernoulli
-I = 5;                       % Gibbs iterations
-I0 = 2;                      % Gibbs burn-in 
+I = 3000;                       % Gibbs iterations
+I0 = 1500;                      % Gibbs burn-in 
 K = 2;                          % Thinning parameter
 A_init = ones(dim_y, dim_y);    % Initial adjacency matrix
-gamma = 0.1:0.1:0.8;
-R=16;
-
+gamma = 0.2:0.1:0.6
+R=40;
+%parpool(pc, str2num(getenv('SLURM_CPUS_ON_NODE')));
 
 tic
 parfor run=1:R
     
       [f_score] = bernoulli_f(A, I, I0, K, A_init, C, mu_x, sig_x, gamma);
       f_bernoulli(run,:) = f_score;
-     
+         
 end  
 toc
 
 % Find average of R runs
 avg_f_bernoulli = mean(f_bernoulli,1);
 
-save('bernoulli_output.mat','avg_f_bernoulli')
+save('gb4_test.mat','avg_f_bernoulli')
 
 
 
