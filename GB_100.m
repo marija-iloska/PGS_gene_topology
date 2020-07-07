@@ -1,18 +1,11 @@
 clear all
 clc
 
-%rehash toolboxcache
-%restoredefaultpath
-%savepath
 
-
-%pc = parcluster('local');
-
-%pc.JobStorageLocation = strcat(getenv('SCRATCH'),'/', getenv('SLURM_JOB_ID'))
 
 
 %% SETTINGS for generating data
-dim_y = 12; var_u =1;
+dim_y = 20; var_u =1;
 p_s = 0.7; p_ns = 0.3;
 T = 1e3;
 
@@ -46,11 +39,10 @@ I = 3000;                       % Gibbs iterations
 I0 = 1500;                      % Gibbs burn-in 
 K = 2;                          % Thinning parameter
 A_init = ones(dim_y, dim_y);    % Initial adjacency matrix
-gamma = 0.2:0.1:0.6
-R=40;
-%parpool(pc, str2num(getenv('SLURM_CPUS_ON_NODE')));
-%pc = parcluster('local');
-parpool(30)
+gamma = 0.1:0.1:0.8
+R=100;
+
+parpool(34)
 
 
 tic
@@ -65,7 +57,7 @@ toc
 % Find average of R runs
 avg_f_bernoulli = mean(f_bernoulli,1);
 
-save('gb12_partest.mat','avg_f_bernoulli')
+save('gb20.mat','avg_f_bernoulli')
 
 
 

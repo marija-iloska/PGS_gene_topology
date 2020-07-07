@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+#SBATCH --job-name=gene_bernoulli
+#SBATCH --output=res12_partest.txt
+#SBATCH --ntasks-per-node=40
+#SBATCH --nodes=1
+#SBATCH --time=20:00:00
+#SBATCH -p long-40core
+
+module load shared
+module load matlab/2019a
+
+cd /gpfs/gpfs/home/miloska/gene_seawulf
+
+mkdir -p $SCRATCH/$SLURM_JOB_ID
+
+matlab -nodisplay < GB_test.m
+
+rm -rf $SCATCH/$SLURM_JOB_ID

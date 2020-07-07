@@ -1,7 +1,7 @@
 function [fs_3] = bernoulli_f(A, I, I0, K, A_init, C, mu_x, sig_x, gamma)
 
 
-for prior = 1:length(gamma)       
+parfor prior = 1:length(gamma)       
     
     tic
     % Gibbs loop
